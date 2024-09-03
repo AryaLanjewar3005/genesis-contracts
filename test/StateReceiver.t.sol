@@ -183,7 +183,7 @@ contract StateReceiverTest is Test {
     );
   }
 
-  function tes_FailedStateSyncs(bytes[] memory stateDatas) external {
+  function test_FailedStateSyncs(bytes[] memory stateDatas) external {
     vm.assume(stateDatas.length > 1 && stateDatas.length < 10);
 
     address receiver = address(revertingReceiver);
