@@ -97,40 +97,50 @@ contract BorValidatorSetTest is Test {
 
         vm.prank(SYSTEM_ADDRESS);
         borValidatorSet.commitSpan(newSpan, startBlock, endBlock, validatorBytes, producerBytes);
-
-        (uint256 number_, uint256 startBlock_, uint256 endBlock_) = borValidatorSet.spans(0);
-        assertEq(number_, 0);
-        assertEq(startBlock_, 0);
-        assertEq(endBlock_, FIRST_END_BLOCK);
-        assertEq(borValidatorSet.spanNumbers(0), 0);
-        (uint256 id, uint256 power, address signer) = borValidatorSet.validators(0, 0);
-        (address[] memory initialAddresses, uint256[] memory initialPowers) = borValidatorSet.getInitialValidators();
-        assertEq(id, 0);
-        assertEq(power, initialPowers[0]);
-        assertEq(signer, initialAddresses[0]);
-        vm.expectRevert();
-        borValidatorSet.validators(0, 1);
-        (id, power, signer) = borValidatorSet.producers(0, 0);
-        assertEq(id, 0);
-        assertEq(power, initialPowers[0]);
-        assertEq(signer, initialAddresses[0]);
-        vm.expectRevert();
-        borValidatorSet.producers(0, 1);
-        (number_, startBlock_, endBlock_) = borValidatorSet.spans(newSpan);
-        assertEq(number_, newSpan);
-        assertEq(startBlock_, startBlock);
-        assertEq(endBlock_, endBlock);
-        assertEq(borValidatorSet.spanNumbers(1), newSpan);
+        {
+            (uint256 number_, uint256 startBlock_, uint256 endBlock_) = borValidatorSet.spans(0);
+            assertEq(number_, 0);
+            assertEq(startBlock_, 0);
+            assertEq(endBlock_, FIRST_END_BLOCK);
+            assertEq(borValidatorSet.spanNumbers(0), 0);
+        }
+        {
+            (uint256 id, uint256 power, address signer) = borValidatorSet.validators(0, 0);
+            (address[] memory initialAddresses, uint256[] memory initialPowers) = borValidatorSet.getInitialValidators();
+            assertEq(id, 0);
+            assertEq(power, initialPowers[0]);
+            assertEq(signer, initialAddresses[0]);
+            vm.expectRevert();
+            borValidatorSet.validators(0, 1);
+        }
+        {
+            (uint256 id, uint256 power, address signer) = borValidatorSet.producers(0, 0);
+            assertEq(id, 0);
+            vm.expectRevert();
+            borValidatorSet.producers(0, 1);
+        }
+        {
+            (uint256 number_, uint256 startBlock_, uint256 endBlock_) = borValidatorSet.spans(newSpan);
+            assertEq(number_, newSpan);
+            assertEq(startBlock_, startBlock);
+            assertEq(endBlock_, endBlock);
+            assertEq(borValidatorSet.spanNumbers(1), newSpan);
+        }
+        
         for (uint256 i = 0; i < numOfValidators; i++) {
-            (id, power, signer) = borValidatorSet.validators(newSpan, i);
-            assertEq(id, ids[i]);
-            assertEq(power, powers[i]);
-            assertEq(signer, signers[i]);
+            {
+                (uint256 id, uint256 power, address signer) = borValidatorSet.validators(newSpan, i);
+                assertEq(id, ids[i]);
+                assertEq(power, powers[i]);
+                assertEq(signer, signers[i]);
+            }
             if (i >= numOfProducers) continue;
-            (id, power, signer) = borValidatorSet.producers(newSpan, i);
-            assertEq(id, ids[i]);
-            assertEq(power, powers[i]);
-            assertEq(signer, signers[i]);
+            {
+                (uint256 id, uint256 power, address signer) = borValidatorSet.producers(newSpan, i);
+                assertEq(id, ids[i]);
+                assertEq(power, powers[i]);
+                assertEq(signer, signers[i]);
+            }
         }
         vm.expectRevert();
         borValidatorSet.validators(newSpan, numOfValidators);
