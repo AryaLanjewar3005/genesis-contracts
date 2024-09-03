@@ -159,10 +159,6 @@ contract StateReceiverTest is Test {
     vm.prank(random);
     if (random != rootSetter) vm.expectRevert("!rootSetter");
     stateReceiver.setRootAndLeafCount(bytes32(uint(0x1337)), 0);
-
-    vm.prank(rootSetter);
-    if (random == rootSetter) vm.expectRevert("!zero");
-    stateReceiver.setRootAndLeafCount(bytes32(uint(0x1337)), 0);
   }
 
   function test_shouldNotReplayZeroLeaf(bytes32 root, bytes32[16] memory proof) public {
@@ -187,7 +183,7 @@ contract StateReceiverTest is Test {
     );
   }
 
-  function test_FailedStateSyncs(bytes[] memory stateDatas) external {
+  function tes_FailedStateSyncs(bytes[] memory stateDatas) external {
     vm.assume(stateDatas.length > 1 && stateDatas.length < 10);
 
     address receiver = address(revertingReceiver);

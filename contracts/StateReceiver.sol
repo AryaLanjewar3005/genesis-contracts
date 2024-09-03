@@ -61,7 +61,6 @@ contract StateReceiver is System {
 
   function setRootAndLeafCount(bytes32 _root, uint256 _leafCount) external {
     require(msg.sender == rootSetter, "!rootSetter");
-    require(failedStateSyncsRoot == bytes32(0), "!zero");
     failedStateSyncsRoot = _root;
     leafCount = _leafCount;
   }
