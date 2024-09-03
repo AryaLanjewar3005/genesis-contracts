@@ -85,13 +85,15 @@ contract BorValidatorSetTest is Test {
         bytes memory validatorBytes;
         bytes memory producerBytes;
 
-        string[] memory cmd = new string[](4);
-        cmd[0] = "node";
-        cmd[1] = "test/helpers/rlpEncodeValidatorsAndProducers.js";
-        cmd[2] = vm.toString(numOfValidators);
-        cmd[3] = vm.toString(numOfProducers);
-        bytes memory result = vm.ffi(cmd);
-        (ids, powers, signers, validatorBytes, producerBytes) = abi.decode(result, (uint256[], uint256[], address[], bytes, bytes));
+        {
+            string[] memory cmd = new string[](4);
+            cmd[0] = "node";
+            cmd[1] = "test/helpers/rlpEncodeValidatorsAndProducers.js";
+            cmd[2] = vm.toString(numOfValidators);
+            cmd[3] = vm.toString(numOfProducers);
+            bytes memory result = vm.ffi(cmd);
+            (ids, powers, signers, validatorBytes, producerBytes) = abi.decode(result, (uint256[], uint256[], address[], bytes, bytes));
+        }
 
         vm.prank(SYSTEM_ADDRESS);
         borValidatorSet.commitSpan(newSpan, startBlock, endBlock, validatorBytes, producerBytes);
